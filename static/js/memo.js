@@ -81,7 +81,7 @@ function processMemoAction(src) {
         case 'Edit':
             // Reload attribute in case someone has changed its value
             // since the page has been loaded
-            jQuery.getJSON('/Helpers/GetMemo', {ObjectType: memoObjectType, ObjectId: memoObjectId}, function(value) {
+            jQuery.getJSON(RT.Config.WebPath + '/Helpers/GetMemo', {ObjectType: memoObjectType, ObjectId: memoObjectId}, function(value) {
                 if (value) {
                     memoValue = value;
                     memoTextarea.value = memoValue;
