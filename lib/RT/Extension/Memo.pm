@@ -10,7 +10,7 @@ our $VERSION = '0.01';
 
 =head1 NAME
 
-RT-Extension-Memo - Add a memo widget to tickets
+RT::Extension::Memo - Add a memo widget to tickets
 
 =head1 DESCRIPTION
 
