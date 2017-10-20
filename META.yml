@@ -1,5 +1,5 @@
 ---
-abstract: 'RT-Extension-Memo Extension'
+abstract: 'Add a memo widget to tickets'
 author:
   - 'Gérald Sédrati-Dinet <gibus@easter-eggs.com>'
 build_requires:
@@ -9,7 +9,7 @@ configure_requires:
 distribution_type: module
 dynamic_config: 1
 generated_by: 'Module::Install version 1.18'
-license: gplv3
+license: gpl_3
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
@@ -27,7 +27,7 @@ requires:
 resources:
   license: http://opensource.org/licenses/gpl-license.php
   repository: https://github.com/gibus/RT-Extension-Memo
-version: '0.01'
+version: '0.03'
 x_module_install_rtx_version: '0.39'
 x_requires_rt: 4.2.0
 x_rt_too_new: 4.6.0
