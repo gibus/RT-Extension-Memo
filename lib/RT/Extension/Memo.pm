@@ -38,6 +38,10 @@ Should "rich text" editing be enabled for memo widget?
 
 Set number of lines of the textarea for editing memo.
 
+=item C<$MemoRichTextHeight>
+
+Set height (in number of pixels) of the rich text editor for editing memo.
+
 =back
 
 =head1 RIGHTS
@@ -122,7 +126,16 @@ $RT::Config::META{MemoHeight} = {
     SortOrder       => 15.2,
     Widget          => '/Widgets/Form/Integer',
     WidgetArguments => {
-        Description => 'Memo height',
+        Description => 'Memo height (in number of lines) for plain text editing',
+    },
+};
+$RT::Config::META{MemoRichTextHeight} = {
+    Section         => 'Ticket composition',
+    Overridable     => 1,
+    SortOrder       => 15.3,
+    Widget          => '/Widgets/Form/Integer',
+    WidgetArguments => {
+        Description => 'Memo height (in number of pixel) for rich text editing',
     },
 };
 

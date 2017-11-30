@@ -63,7 +63,7 @@ function setEditMode() {
         }
         // Set the type
         type.val("text/html");
-        memoEditor = CKEDITOR.replace(memoTextarea.name, {width: '100%', height: RT.Config.MessageBoxRichTextHeight});
+        memoEditor = CKEDITOR.replace(memoTextarea.name, {width: '100%', height: RT.Config.MemoRichTextHeight});
         jQuery("#" + memoTextarea.name + "___Frame").addClass("richtext-editor");
     }
 
