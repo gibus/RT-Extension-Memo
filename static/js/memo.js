@@ -16,6 +16,9 @@ function setDisplayMode(doUpdate) {
     if (doUpdate) {
         memoValue = memoTextarea.value;
         memoDiv.innerHTML = memoValue;
+        if (! RT.Config.MemoRichText) {
+            memoDiv.innerHTML = memoValue.replace(/\n/g, '<br />');
+        }
     }
     // Cancel textarea content
     else {
