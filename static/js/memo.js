@@ -199,5 +199,13 @@ function memoInit() {
 }
 
 jQuery(document).ready(function() {
-    memoInit();
+    if (RT.MemoRT6) {
+        document.body.addEventListener('htmx:load', function(evt) {
+            if (jQuery(evt.detail.elt).hasClass('history') && jQuery(evt.detail.elt).hasClass('ticket')) {
+                memoInit();
+            }
+        });
+    } else {
+        memoInit();
+    }
 });
