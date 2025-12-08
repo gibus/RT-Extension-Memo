@@ -145,24 +145,29 @@ my $old_MergeInto = RT::Ticket->can("_MergeInto");
     my $self = shift;
     my $MergeInto = shift;
 
+    $self->ClearAttributes;
     my $attr = $self->FirstAttribute('Memo');
+    $MergeInto->ClearAttributes;
+    my $merged_attr = $MergeInto->FirstAttribute('Memo');
+
     my ($ok, $msg) = $old_MergeInto->($self, $MergeInto);
 
-    if ($attr && $attr->Content && $attr->Content !~ /^\s*$/) {
-        my $merged_memo = '';
-        my $merged_attr = $MergeInto->FirstAttribute('Memo');
-        if ($merged_attr && $merged_attr->Content && $merged_attr->Content !~ /^\s*$/) {
-            if (RT->Config->Get('MemoRichText', $self->CurrentUser)) {
-                $merged_memo = $merged_attr->Content . "<br />";
-            } else {
-                $merged_memo = $merged_attr->Content . "\n";
+    if ($ok) {
+        if ($attr && $attr->Content && $attr->Content !~ /^\s*$/) {
+            my $merged_memo = '';
+            if ($merged_attr && $merged_attr->Content && $merged_attr->Content !~ /^\s*$/) {
+                if (RT->Config->Get('MemoRichText', $self->CurrentUser)) {
+                    $merged_memo = $merged_attr->Content . "<br />";
+                } else {
+                    $merged_memo = $merged_attr->Content . "\n";
+                }
             }
-        }
-        $merged_memo .= $attr->Content;
-        my ($memo_ok, $memo_msg) = $MergeInto->SetAttribute(Name => 'Memo', Content => $merged_memo);
-        unless ($memo_ok) {
-            $RT::Handle->Rollback();
-            return (0, $self->loc("Merge failed. Couldn't merge Memo"));
+            $merged_memo .= $attr->Content;
+            my ($memo_ok, $memo_msg) = $MergeInto->SetAttribute(Name => 'Memo', Content => $merged_memo);
+            unless ($memo_ok) {
+                $RT::Handle->Rollback();
+                return (0, $self->loc("Merge failed. Couldn't merge Memo"));
+            }
         }
     }
 
