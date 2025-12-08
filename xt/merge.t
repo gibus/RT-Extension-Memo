@@ -55,6 +55,10 @@ my $first_ticket = RT::Test->create_ticket( Queue => 'Foo', Subject => 'Test Tic
 my $first_ticket_id = $first_ticket->id;
 my $second_ticket = RT::Test->create_ticket( Queue => 'Foo', Subject => 'Test Ticket Memo To Merge', Requestor => 'root@localhost' );
 my $second_ticket_id = $second_ticket->id;
+my $third_ticket = RT::Test->create_ticket( Queue => 'Foo', Subject => 'Test Ticket without Memo To Merge', Requestor => 'root@localhost' );
+my $third_ticket_id = $third_ticket->id;
+my $fourth_ticket = RT::Test->create_ticket( Queue => 'Foo', Subject => 'Test Ticket without Memo To Be Merged Into', Requestor => 'root@localhost' );
+my $fourth_ticket_id = $fourth_ticket->id;
 
 
 # Create memos
@@ -98,6 +102,30 @@ diag "Testing second ticket Memo";
     is($second_memo->content, 'This is a memo <strong>to merge</strong>', 'Second Memo');
 }
 
+diag "Testing third ticket without Memo";
+{
+    # Display ticket
+    $m->goto_ticket($third_ticket_id);
+
+    my $dom = $m->dom;
+
+    # Check no Memo content
+    my $third_memo = $dom->at('#MemoContent');
+    ok(!$third_memo->content, 'No Memo');
+}
+
+diag "Testing fourth ticket without Memo";
+{
+    # Display ticket
+    $m->goto_ticket($fourth_ticket_id);
+
+    my $dom = $m->dom;
+
+    # Check no Memo content
+    my $fourth_memo = $dom->at('#MemoContent');
+    ok(!$fourth_memo->content, 'No Memo');
+}
+
 diag "Testing merging two tickets with Memo";
 {
     my ($id, $msg) = $second_ticket->MergeInto($first_ticket->id);
@@ -113,10 +141,35 @@ diag "Testing merging two tickets with Memo";
     is($merged_memo->content, 'This is a <strong>memo</strong><br>This is a memo <strong>to merge</strong>', 'Merged Memo into Memo');
 }
 
-# Check second ticket memo
-$mjs->get($m->rt_base_url . 'Ticket/Display.html?id=' . $second_ticket->id);
-my $second_memo = $mjs->selector('#MemoContent', single => 1);
-is($second_memo->get_attribute('innerHTML'), 'This is a memo <strong>to merge</strong>', 'Second memo');
+diag "Testing merging ticket with Memo into ticket without Memo";
+{
+    my ($id, $msg) = $first_ticket->MergeInto($third_ticket->id);
+    ok($id, $msg);
+
+    # Display ticket
+    $m->goto_ticket($third_ticket_id);
+
+    my $dom = $m->dom;
+
+    # Check Memo content
+    my $merged_memo = $dom->at('#MemoContent');
+    is($merged_memo->content, 'This is a <strong>memo</strong><br>This is a memo <strong>to merge</strong>', 'Merged Memo into no Memo');
+}
+
+diag "Testing merging ticket without Memo into ticket with Memo";
+{
+    my ($id, $msg) = $fourth_ticket->MergeInto($first_ticket->id);
+    ok($id, $msg);
+
+    # Display ticket
+    $m->goto_ticket($first_ticket_id);
+
+    my $dom = $m->dom;
+
+    # Check Memo content
+    my $merged_memo = $dom->at('#MemoContent');
+    is($merged_memo->content, 'This is a <strong>memo</strong><br>This is a memo <strong>to merge</strong>', 'Merged no Memo into Memo');
+}
 
 $m->logout;
 }
