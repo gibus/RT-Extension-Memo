@@ -27,9 +27,9 @@ if ($Object->CurrentUserHasRight('SeeMemo') && $attr && $attr->Content && $attr-
     $memo_value = $attr->Content;
 }
 my $memo_content_html = $memo_value;
-$memo_content_html =~ s/\n/<br \/>/g unless $memo_content_html =~ /<br \/>/;
+$memo_content_html =~ s/\n/<br \/>/g unless $attr && $attr->ContentType eq 'text/html';
 my $memo_linefeeds = $memo_value;
-$memo_linefeeds =~ s/\n/<br \/>/g;
+$memo_linefeeds =~ s/\n/<br \/>/g unless $attr && $attr->ContentType eq 'text/html';
 
 # wrap="something" seems to really break IE + richtext
 my $wrap_type = $Type eq 'text/html' ? '' : 'wrap="soft"';
